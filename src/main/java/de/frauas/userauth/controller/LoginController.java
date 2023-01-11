@@ -19,19 +19,9 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String showLoginForm(Model model) {
-        // TODO
-        return "ToDo";
-    }
-
     @PostMapping
-    public String login(@Valid @ModelAttribute("user") UserDto userDto,
-                        BindingResult result,
-                        Model model) {
+    public String login(@RequestBody UserDto userDto) {
         // TODO
         return "ToDo";
     }
-
-
 }

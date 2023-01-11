@@ -2,6 +2,7 @@ package de.frauas.userauth.controller;
 
 import de.frauas.userauth.dto.UserDto;
 import de.frauas.userauth.entity.User;
+import de.frauas.userauth.exceptions.UserAlreadyCreatedException;
 import de.frauas.userauth.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -20,33 +21,15 @@ public class RegisterController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String showRegisterForm(Model model) {
-        // Regeln wir das so, oder ist das eher ein Frontend Ding?
-        UserDto user = new UserDto();
-        model.addAttribute("user");
-        return "register";
-    }
-
     @PostMapping
-    public String register(@Valid @ModelAttribute("user") UserDto userDto,
-                           BindingResult result,
-                           Model model) {
+    public void register(@RequestBody UserDto userDto) throws UserAlreadyCreatedException {
 
         User existingUser = userService.findUserByUserName(userDto.getUsername());
 
-        if (existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
-            result.rejectValue("username", null,
-                    "There is already an account registered with the same username");
-        }
-
-        if (result.hasErrors()) {
-            model.addAttribute("user", userDto);
-            return "/register";
+        if (existingUser != null) {
+            throw new UserAlreadyCreatedException();
         }
 
         userService.saveUser(userDto);
-        return "redirect:/login";
     }
-
 }

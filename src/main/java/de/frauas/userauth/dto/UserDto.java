@@ -1,16 +1,15 @@
 package de.frauas.userauth.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import de.frauas.userauth.enums.RoleType;
+import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.List;
+
+@Data
+@Builder
 public class UserDto {
     private Long id;
     private String username;
     private String password;
+    private List<RoleType> roles;
 }

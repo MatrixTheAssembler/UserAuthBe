@@ -20,4 +20,6 @@ public class Comment {
     private String content;
     @ManyToOne
     private Article article;
+    @ManyToOne
+    private User author;
 }

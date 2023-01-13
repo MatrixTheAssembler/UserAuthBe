@@ -1,9 +1,11 @@
 package de.frauas.userauth.dto;
 
 import de.frauas.userauth.enums.RoleType;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
+
 
 @Data
 @Builder

@@ -3,6 +3,7 @@ package de.frauas.userauth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +34,19 @@ public class SpringSecurity {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/register").permitAll()
+                                .requestMatchers("/login").permitAll()
                                 .requestMatchers("/users").hasRole("ADMIN")
+                                .requestMatchers("/roles").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/article").hasAnyRole("AUTHOR", "READER", "MODERATOR")
+                                .requestMatchers(HttpMethod.POST, "/article").hasRole("AUTHOR")
+                                .requestMatchers(HttpMethod.PUT, "/article").hasRole("AUTHOR")
+                                .requestMatchers(HttpMethod.DELETE, "/article").hasAnyRole("AUTHOR", "MODERATOR")
+
+                                .requestMatchers(HttpMethod.GET, "/article/comment").hasAnyRole("AUTHOR", "READER", "MODERATOR")
+                                .requestMatchers(HttpMethod.POST, "/article/comment").hasRole("READER")
+                                .requestMatchers(HttpMethod.PUT, "/article/comment").hasRole("READER")
+                                .requestMatchers(HttpMethod.DELETE, "/article/comment").hasAnyRole("READER", "MODERATOR")
                 ).formLogin(
                         form -> form
                                 .loginPage("/login")

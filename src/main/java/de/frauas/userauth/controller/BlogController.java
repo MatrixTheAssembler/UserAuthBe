@@ -8,8 +8,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/article")
 public class BlogController {
 
-    @GetMapping
-    public String getArticle() {
+    @GetMapping("/{id}")
+    public String getArticle(@PathVariable String id) {
+        // TODO
+        return "ToDo";
+    }
+
+    @GetMapping("/all")
+    public String getAllArticles() {
         // TODO
         return "ToDo";
     }

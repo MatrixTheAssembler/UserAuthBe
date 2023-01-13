@@ -26,10 +26,9 @@ public class Article {
     private String content;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "article_comments",
-            joinColumns = {@JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "COMMENT_ID", referencedColumnName = "ID")})
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToOne
+    private User author;
 
 }

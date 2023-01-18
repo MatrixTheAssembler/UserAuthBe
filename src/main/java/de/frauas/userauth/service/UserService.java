@@ -20,7 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void saveUser(UserDto userDto) {
+    public void registerUser(UserDto userDto) {
         User user = new User();
         user.setUsername(userDto.getUsername());
         //TODO: add salt to password
@@ -36,5 +36,10 @@ public class UserService {
 
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    public void updateRoleList(User user, List<RoleType> roles) {
+        user.setRoles(roles);
+        userRepository.save(user);
     }
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,4 +24,11 @@ public class Comment {
     private Article article;
     @ManyToOne
     private User author;
+    @Column(nullable = false)
+    private Date creationDate;
+
+    @PrePersist
+    void creationDate() {
+        this.creationDate = new Date();
+    }
 }

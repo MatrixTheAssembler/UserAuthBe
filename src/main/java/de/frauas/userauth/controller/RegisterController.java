@@ -30,6 +30,6 @@ public class RegisterController {
             throw new UserAlreadyCreatedException();
         }
 
-        userService.saveUser(userDto);
+        userService.registerUser(userDto);
     }
 }

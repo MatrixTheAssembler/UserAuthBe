@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -24,11 +25,16 @@ public class Article {
     private String headline;
     @Column
     private String content;
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
-
     @ManyToOne
     private User author;
+    @Column(nullable = false)
+    private Date creationDate;
+
+    @PrePersist
+    void creationDate() {
+        this.creationDate = new Date();
+    }
 
 }

@@ -1,5 +1,6 @@
 package de.frauas.userauth.handlers;
 
+import de.frauas.userauth.exceptions.BadLoginException;
 import de.frauas.userauth.exceptions.UserAlreadyCreatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,4 +15,12 @@ public class ApplicationExceptionHandler {
     )
     @ExceptionHandler(UserAlreadyCreatedException.class)
     public void handleException(UserAlreadyCreatedException e){}
+
+
+    @ResponseStatus(
+            value = HttpStatus.BAD_REQUEST,
+            reason = "Wrong username or password"
+    )
+    @ExceptionHandler(BadLoginException.class)
+    public void handleException(BadLoginException e){}
 }

@@ -20,7 +20,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<UserDto> users() {
         return UserMapper.toUserDtoList(userService.findAllUsers());
     }

@@ -2,33 +2,33 @@ package de.frauas.userauth.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(nullable = false, unique = true)
     private String content;
+
     @ManyToOne
     private Article article;
+
     @ManyToOne
     private User author;
-    @Column(nullable = false)
-    private Date creationDate;
 
-    @PrePersist
-    void creationDate() {
-        this.creationDate = new Date();
-    }
+    @CreatedDate
+    private LocalDate creationDate;
 }

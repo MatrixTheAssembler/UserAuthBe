@@ -1,7 +1,6 @@
 package de.frauas.userauth.controller;
 
 import de.frauas.userauth.dto.UserDto;
-import de.frauas.userauth.entity.User;
 import de.frauas.userauth.exceptions.UserAlreadyCreatedException;
 import de.frauas.userauth.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -23,13 +22,6 @@ public class RegisterController {
 
     @PostMapping
     public void register(@RequestBody UserDto userDto) throws UserAlreadyCreatedException {
-
-        User existingUser = userService.findUserByUserName(userDto.getUsername());
-
-        if (existingUser != null) {
-            throw new UserAlreadyCreatedException();
-        }
-
         userService.registerUser(userDto);
     }
 }

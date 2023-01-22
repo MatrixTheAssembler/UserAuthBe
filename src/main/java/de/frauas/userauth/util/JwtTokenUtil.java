@@ -12,10 +12,8 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-//    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 10 * 1000; // 1 hour
-//    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 1000; // 24 hours
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours
 
     @Value("${jwt.secret}")
     private String secret;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @ResponseBody
 @RequestMapping("/article")
-public class BlogController {
+public class ArticleController {
 
     @GetMapping("/{id}")
     public String getArticle(@PathVariable String id) {
@@ -26,41 +26,15 @@ public class BlogController {
         return "ToDo";
     }
 
-    @DeleteMapping
-    public String deleteArticle() {
+    @DeleteMapping("/{id}")
+    public String deleteArticle(@PathVariable String id) {
         // TODO
         return "ToDo";
     }
 
-    @PutMapping
-    public String updateArticle() {
+    @PutMapping("/{id}")
+    public String updateArticle(@PathVariable String id) {
         // TODO
         return "ToDo";
     }
-
-    @GetMapping("/comment")
-    public String getComments() {
-        // TODO
-        return "ToDo";
-    }
-
-    @PostMapping("/comment")
-    public String createComment() {
-        // TODO
-        return "ToDo";
-    }
-
-    @DeleteMapping("/comment")
-    public String deleteComment() {
-        // TODO
-        return "ToDo";
-    }
-
-    @PutMapping("/comment")
-    public String updateComment() {
-        // TODO
-        return "ToDo";
-    }
-
-
 }

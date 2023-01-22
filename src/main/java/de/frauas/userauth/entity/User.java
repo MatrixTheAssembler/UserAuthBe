@@ -15,8 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,5 +31,6 @@ public class User {
     private String salt;
 
     @ElementCollection
+    @Enumerated(EnumType.STRING)
     private List<RoleType> roles = new ArrayList<>();
 }

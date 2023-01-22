@@ -5,6 +5,7 @@ import de.frauas.userauth.entity.User;
 import de.frauas.userauth.enums.RoleType;
 import de.frauas.userauth.mapper.UserMapper;
 import de.frauas.userauth.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +31,14 @@ public class UserController {
         return List.of(RoleType.values());
     }
 
-    @PutMapping("/{userName}")
-    public void updateRoles(@PathVariable String userName, @RequestBody List<RoleType> roleList) {
-        User existingUser = userService.findUserByUserName(userName);
-        userService.updateRoleList(existingUser, roleList);
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDto> user(@PathVariable String username, @RequestHeader("Authorization") String header) {
+        return ResponseEntity.ok(UserMapper.toUserDto(userService.findUserByUserName(username)));
     }
 
-
+    @PutMapping("/{username}")
+    public void updateRoles(@PathVariable String username, @RequestBody List<RoleType> roleList) {
+        User existingUser = userService.findUserByUserName(username);
+        userService.updateRoleList(existingUser, roleList);
+    }
 }

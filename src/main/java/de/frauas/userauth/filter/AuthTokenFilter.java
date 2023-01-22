@@ -1,5 +1,6 @@
 package de.frauas.userauth.filter;
 
+import de.frauas.userauth.exceptions.UnauthorizedException;
 import de.frauas.userauth.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,18 +30,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         try {
-            String token = jwtTokenUtil.getAccessTokenFromRequest(request);
+            String token = jwtTokenUtil.getTokenFromRequest(request);
 
             if (token == null || !jwtTokenUtil.validateToken(token)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-                return;
+                System.out.println("Unauthorized");
+                throw new UnauthorizedException();
             }
 
             List<SimpleGrantedAuthority> authorities = Arrays.stream(jwtTokenUtil.getRolesFromToken(token))
                     .map(SimpleGrantedAuthority::new)
                     .toList();
-
-            System.out.println("Authorities: " + authorities);
 
             // Tells Spring which roles the current user has
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

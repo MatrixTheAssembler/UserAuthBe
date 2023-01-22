@@ -12,8 +12,10 @@ import java.util.Date;
 
 @Component
 public class JwtTokenUtil {
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours
+//    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1 hour
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 10 * 1000; // 1 hour
+//    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 1000; // 24 hours
 
     @Value("${jwt.secret}")
     private String secret;
@@ -72,11 +74,15 @@ public class JwtTokenUtil {
         }
     }
 
-    public String getAccessTokenFromRequest(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+    public String getTokenFromRequest(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        return getTokenFromAuthorizationHeader(header);
+    }
+
+    public String getTokenFromAuthorizationHeader(String header){
         String prefix = "Bearer ";
-        if (token != null && token.startsWith(prefix)) {
-            return token.substring(prefix.length());
+        if (header != null && header.startsWith(prefix)) {
+            return header.substring(prefix.length());
         }
         return null;
     }

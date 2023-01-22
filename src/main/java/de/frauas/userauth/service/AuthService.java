@@ -47,7 +47,8 @@ public class AuthService {
         return tokens;
     }
 
-    public Map<String, String> refreshTokens(String refreshToken) {
+    public Map<String, String> refreshTokens(String header) {
+        String refreshToken = jwtTokenUtil.getTokenFromAuthorizationHeader(header);
         String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
         User user = userService.findUserByUserName(username);
 

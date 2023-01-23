@@ -49,8 +49,8 @@ public class SpringSecurity {
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/refreshTokens").permitAll()
                                 .requestMatchers("/error").permitAll()
-//                                .requestMatchers("/users").hasAuthority("ADMIN")
-                                .requestMatchers("/roles").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/users/{username}").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/users/roles").hasAuthority("ADMIN")
 
                                 .requestMatchers("/users/{id}").hasAnyAuthority("LESER", "AUTOR", "MODERATOR", "ADMIN")
 

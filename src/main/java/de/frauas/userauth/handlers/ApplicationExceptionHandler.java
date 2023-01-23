@@ -1,5 +1,6 @@
 package de.frauas.userauth.handlers;
 
+import de.frauas.userauth.exceptions.ArticleNotFoundException;
 import de.frauas.userauth.exceptions.BadLoginException;
 import de.frauas.userauth.exceptions.UnauthorizedException;
 import de.frauas.userauth.exceptions.UserAlreadyCreatedException;
@@ -26,7 +27,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
 
     @ExceptionHandler(BadLoginException.class)
-    public ResponseEntity<Object> handleException(BadLoginException e){
+    public ResponseEntity<Object> handleException(BadLoginException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
@@ -34,5 +35,10 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<Object> handleArticleNotFoundException(ArticleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

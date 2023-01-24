@@ -23,8 +23,8 @@ public class Comment {
     @Column(nullable = false, unique = true)
     private String content;
 
-    @ManyToOne
-    private Article article;
+    //@ManyToOne
+    //private Article article;
 
     @ManyToOne
     private User author;

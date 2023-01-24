@@ -13,7 +13,7 @@ public class ArticleDto {
     private Long id;
     private String headline;
     private String content;
-    private List<Comment> comments;
+    private List<Comment> comments; //TODO CommentDTO?
     private String author;
     private LocalDate creationDate;
 }

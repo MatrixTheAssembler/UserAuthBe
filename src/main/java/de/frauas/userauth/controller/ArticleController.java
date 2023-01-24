@@ -36,17 +36,17 @@ public class ArticleController {
     }
 
     @PostMapping
-    public void createArticle(@RequestBody ArticleDto articleDto) {
-        articleService.createArticle(articleDto, userService.findUserByUserName(articleDto.getAuthor()));
+    public void createArticle(@RequestBody ArticleDto articleDto, @RequestHeader("Authorization") String header) {
+        articleService.createArticle(articleDto, header);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteArticle(@PathVariable Long id) { //Todo nur Autor
-        articleService.deleteArticle(id);
+    public void deleteArticle(@PathVariable Long id, @RequestHeader("Authorization") String header) {
+        articleService.deleteArticle(id, header);
     }
 
-    @PutMapping("/{id}")
-    public void updateArticle(@PathVariable Long id, @RequestBody String headline, @RequestBody String content) { //Todo nur Autor
-        articleService.updateArticle(id, headline, content);
+    @PutMapping //TODO id in PathVariable?
+    public void updateArticle(@RequestBody ArticleDto articleDto, @RequestHeader("Authorization") String header) {
+        articleService.updateArticle(articleDto, header);
     }
 }

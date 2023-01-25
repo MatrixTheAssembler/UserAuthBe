@@ -80,12 +80,6 @@ public class ArticleService {
         Article existingArticle = findArticleById(articleId).orElseThrow(ArticleNotFoundException::new);
 
         commentRepository.save(Comment.builder().content(comment).author(author).article(existingArticle).build());
-
-//        List<Comment> existingComments = existingArticle.getComments();
-//        existingComments.add(Comment.builder().content(comment).author(author).build());
-//        existingArticle.setComments(existingComments);
-//
-//        articleRepository.save(existingArticle);
     }
 
     public Optional<Comment> findCommentById(Long id) {

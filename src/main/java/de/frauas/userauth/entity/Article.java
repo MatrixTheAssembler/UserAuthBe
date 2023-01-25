@@ -36,10 +36,10 @@ public class Article {
     private User author;
 
     @Column(nullable = false)
-    private LocalDateTime creationDate;
+    private LocalDateTime createdAt;
 
     @PrePersist
     void creationDate() {
-        this.creationDate = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 }

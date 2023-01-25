@@ -62,9 +62,9 @@ public class ArticleService {
         articleRepository.deleteById(id);
     }
 
-    public void updateArticle(ArticleDto articleDto, String header) {
+    public void updateArticle(Long id, ArticleDto articleDto, String header) {
         String userName = jwtTokenUtil.getUsernameFromToken(jwtTokenUtil.getTokenFromAuthorizationHeader(header));
-        Article existingArticle = findArticleById(articleDto.getId()).orElseThrow(ArticleNotFoundException::new);
+        Article existingArticle = findArticleById(id).orElseThrow(ArticleNotFoundException::new);
 
         if (!existingArticle.getAuthor().getUsername().equals(userName)) {
             throw new UnauthorizedException();
@@ -79,11 +79,13 @@ public class ArticleService {
         User author = userService.findUserByUserName(jwtTokenUtil.getUsernameFromToken(jwtTokenUtil.getTokenFromAuthorizationHeader(header)));
         Article existingArticle = findArticleById(articleId).orElseThrow(ArticleNotFoundException::new);
 
-        List<Comment> existingComments = existingArticle.getComments();
-        existingComments.add(Comment.builder().content(comment).author(author).build());
-        existingArticle.setComments(existingComments);
+        commentRepository.save(Comment.builder().content(comment).author(author).article(existingArticle).build());
 
-        articleRepository.save(existingArticle);
+//        List<Comment> existingComments = existingArticle.getComments();
+//        existingComments.add(Comment.builder().content(comment).author(author).build());
+//        existingArticle.setComments(existingComments);
+//
+//        articleRepository.save(existingArticle);
     }
 
     public Optional<Comment> findCommentById(Long id) {
@@ -99,7 +101,6 @@ public class ArticleService {
         }
 
         commentRepository.deleteById(id);
-
     }
 
     public void updateComment(Long id, String content, String header) {

@@ -1,13 +1,13 @@
 package de.frauas.userauth.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +28,18 @@ public class Article {
     @Column
     private String content;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne
     private User author;
 
-    @CreatedDate
-    private LocalDate creationDate;
+    @Column(nullable = false)
+    private LocalDateTime creationDate;
+
+    @PrePersist
+    void creationDate() {
+        this.creationDate = LocalDateTime.now();
+    }
 }

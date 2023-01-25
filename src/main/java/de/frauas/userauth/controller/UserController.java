@@ -32,6 +32,7 @@ public class UserController {
         return List.of(RoleType.values());
     }
 
+    //TODO: Sollen alle User das hier benutzen können? Oder zum Beispiel nur der Admin für jeden Nutzer und alle anderen Rollen nur für sich selbst?
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> user(@PathVariable String username, @RequestHeader("Authorization") String header) {
         return ResponseEntity.ok(UserMapper.toUserDto(userService.findUserByUserName(username)));

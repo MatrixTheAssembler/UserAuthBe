@@ -5,7 +5,6 @@ import de.frauas.userauth.entity.Article;
 import de.frauas.userauth.exceptions.ArticleNotFoundException;
 import de.frauas.userauth.mapper.ArticleMapper;
 import de.frauas.userauth.service.ArticleService;
-import de.frauas.userauth.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +16,10 @@ import java.util.List;
 @RequestMapping("/article")
 public class ArticleController {
 
-    private final UserService userService;
     private final ArticleService articleService;
 
-    public ArticleController(ArticleService articleService, UserService userService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -45,8 +42,9 @@ public class ArticleController {
         articleService.deleteArticle(id, header);
     }
 
-    @PutMapping //TODO id in PathVariable?
-    public void updateArticle(@RequestBody ArticleDto articleDto, @RequestHeader("Authorization") String header) {
-        articleService.updateArticle(articleDto, header);
+    @PutMapping("/{id}")
+    public void updateArticle(@PathVariable Long id, @RequestBody ArticleDto articleDto, @RequestHeader(
+            "Authorization") String header) {
+        articleService.updateArticle(id, articleDto, header);
     }
 }

@@ -1,5 +1,6 @@
 package de.frauas.userauth.config;
 
+import de.frauas.userauth.enums.RoleType;
 import de.frauas.userauth.filter.AuthTokenFilter;
 import de.frauas.userauth.service.UserDetailsServiceImpl;
 import de.frauas.userauth.util.JwtTokenUtil;
@@ -30,44 +31,53 @@ public class SpringSecurity {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-
-    // TODO: Fortlaufend alle Endpunkte hier einfügen
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/register").permitAll()
-                                .requestMatchers("/login").permitAll()
-                                .requestMatchers("/refreshTokens").permitAll()
-                                .requestMatchers("/error").permitAll()
-//                                .requestMatchers("/users").hasAuthority("ADMIN")
-                                .requestMatchers("/roles").hasAuthority("ADMIN")
+                        authorize
+                                //RegisterController
+                                .requestMatchers(HttpMethod.POST, "/register").permitAll()
 
-                                .requestMatchers("/users/{id}").hasAnyAuthority("LESER", "AUTOR", "MODERATOR", "ADMIN")
+                                // AuthController
+                                .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/refreshTokens").permitAll()
 
-                                .requestMatchers("/test").hasAuthority("ADMIN")
+                                // UserController
+                                .requestMatchers(HttpMethod.GET, "/users").hasAuthority(RoleType.ADMIN.name())
+                                .requestMatchers(HttpMethod.GET, "/users/roles").hasAuthority(RoleType.ADMIN.name())
+                                .requestMatchers(HttpMethod.GET, "/users/{username}").hasAnyAuthority(RoleType.LESER.name(),
+                                        RoleType.AUTOR.name(), RoleType.MODERATOR.name(), RoleType.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT, "/users/{username}").hasAuthority(RoleType.ADMIN.name())
 
-                                .requestMatchers(HttpMethod.GET, "/article").hasAnyAuthority("AUTOR", "READER", "MODERATOR")
-                                .requestMatchers(HttpMethod.POST, "/article").hasAuthority("AUTOR")
-                                .requestMatchers(HttpMethod.PUT, "/article").hasAuthority("AUTOR")
-                                .requestMatchers(HttpMethod.DELETE, "/article").hasAnyAuthority("AUTOR", "MODERATOR")
 
-                                .requestMatchers(HttpMethod.GET, "/article/comment").hasAnyAuthority("AUTOR", "READER", "MODERATOR")
-                                .requestMatchers(HttpMethod.POST, "/article/comment").hasAuthority("READER")
-                                .requestMatchers(HttpMethod.PUT, "/article/comment").hasAuthority("READER")
-                                .requestMatchers(HttpMethod.DELETE, "/article/comment").hasAnyAuthority("READER", "MODERATOR")
+                                // ArticleController
+                                .requestMatchers(HttpMethod.GET, "/article/*").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/article").hasAuthority(RoleType.AUTOR.name())
+                                .requestMatchers(HttpMethod.PUT, "/article").hasAuthority(RoleType.AUTOR.name())
+                                .requestMatchers(HttpMethod.DELETE, "/article").hasAnyAuthority(RoleType.AUTOR.name()
+                                        , RoleType.MODERATOR.name())
+
+                                // CommentController
+                                .requestMatchers(HttpMethod.POST, "/comment").hasAuthority(RoleType.LESER.name())
+                                .requestMatchers(HttpMethod.PUT, "/comment").hasAuthority(RoleType.LESER.name())
+                                .requestMatchers(HttpMethod.DELETE, "/comment").hasAnyAuthority(RoleType.LESER.name()
+                                        , RoleType.MODERATOR.name())
+
+                                // TestController
+                                .requestMatchers("/test").hasAuthority(RoleType.ADMIN.name())
+
+                                .requestMatchers("/error").permitAll() //Wird für Fehlermeldungen benötigt
+
                                 .anyRequest().authenticated()
                 )
-//                .addFilter(new AuthenticationFilter(jwtTokenUtil, authenticationManager(authenticationConfiguration)))
                 .addFilterBefore(new AuthTokenFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

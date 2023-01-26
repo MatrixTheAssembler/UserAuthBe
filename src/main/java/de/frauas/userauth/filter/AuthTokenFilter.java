@@ -21,10 +21,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/refreshTokens")) {
+        if (uriMatches(request, "/login")
+                || uriMatches(request, "/refreshTokens")
+                || uriMatches(request, "/register")
+                || uriMatches(request, "/article/.*", "GET")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,5 +52,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
+    }
+
+    private boolean uriMatches(HttpServletRequest request, String pattern) {
+        return uriMatches(request, pattern, null);
+    }
+
+    private boolean uriMatches(HttpServletRequest request, String pattern, String httpMethod) {
+        return httpMethod == null ? request.getRequestURI().matches(pattern) :
+                request.getRequestURI().matches(pattern) && request.getMethod().equals(httpMethod);
     }
 }

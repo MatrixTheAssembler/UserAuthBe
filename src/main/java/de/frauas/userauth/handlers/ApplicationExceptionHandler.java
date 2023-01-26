@@ -1,8 +1,6 @@
 package de.frauas.userauth.handlers;
 
-import de.frauas.userauth.exceptions.BadLoginException;
-import de.frauas.userauth.exceptions.UnauthorizedException;
-import de.frauas.userauth.exceptions.UserAlreadyCreatedException;
+import de.frauas.userauth.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,7 +24,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
 
     @ExceptionHandler(BadLoginException.class)
-    public ResponseEntity<Object> handleException(BadLoginException e){
+    public ResponseEntity<Object> handleException(BadLoginException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
@@ -34,5 +32,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<Object> handleArticleNotFoundException(ArticleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<Object> handleCommentNotFoundException(CommentNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

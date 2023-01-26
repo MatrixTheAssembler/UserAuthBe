@@ -3,9 +3,11 @@ package de.frauas.userauth.service;
 import de.frauas.userauth.dto.UserDto;
 import de.frauas.userauth.entity.User;
 import de.frauas.userauth.enums.RoleType;
+import de.frauas.userauth.exceptions.UnauthorizedException;
 import de.frauas.userauth.exceptions.UserAlreadyCreatedException;
 import de.frauas.userauth.repository.UserRepository;
 import de.frauas.userauth.util.SecurityUtil;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,8 +64,15 @@ public class UserService {
         return passwordEncoder.matches(userDtoPassword, userPassword);
     }
 
-    public User findUserByUserName(String userName) {
-        return userRepository.findByUsername(userName);
+    public User findUserByUserName(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        if(!user.getUsername().equals(username)){
+            throw new UnauthorizedException();
+        }
+
+        return user;
     }
 
     public List<User> findAllUsers() {

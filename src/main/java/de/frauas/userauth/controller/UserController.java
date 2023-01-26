@@ -5,6 +5,7 @@ import de.frauas.userauth.entity.User;
 import de.frauas.userauth.enums.RoleType;
 import de.frauas.userauth.mapper.UserMapper;
 import de.frauas.userauth.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/users")
 @ResponseBody
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public List<UserDto> users() {
@@ -32,9 +30,8 @@ public class UserController {
         return List.of(RoleType.values());
     }
 
-    //TODO: Sollen alle User das hier benutzen können? Oder zum Beispiel nur der Admin für jeden Nutzer und alle anderen Rollen nur für sich selbst?
     @GetMapping("/{username}")
-    public ResponseEntity<UserDto> user(@PathVariable String username, @RequestHeader("Authorization") String header) {
+    public ResponseEntity<UserDto> user(@PathVariable String username) {
         return ResponseEntity.ok(UserMapper.toUserDto(userService.findUserByUserName(username)));
     }
 

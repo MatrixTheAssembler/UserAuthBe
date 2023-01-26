@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtTokenUtil {
@@ -45,12 +47,24 @@ public class JwtTokenUtil {
                 .getSubject();
     }
 
+    public String getUsernameFromHeader(String header) {
+        String token = getTokenFromAuthorizationHeader(header);
+        return getUsernameFromToken(token);
+    }
+
     public String[] getRolesFromToken(String token) {
         return JWT.require(Algorithm.HMAC256(secret))
                 .build()
                 .verify(token)
                 .getClaim("roles")
                 .asArray(String.class);
+    }
+
+    public List<RoleType> getRolesFromHeader(String header) {
+        String token = getTokenFromAuthorizationHeader(header);
+        return Arrays.stream(getRolesFromToken(token))
+                .map(RoleType::valueOf)
+                .toList();
     }
 
     public boolean isTokenExpired(String token) {

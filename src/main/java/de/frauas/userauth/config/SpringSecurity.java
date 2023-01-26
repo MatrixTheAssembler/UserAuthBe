@@ -31,8 +31,6 @@ public class SpringSecurity {
 
     private final JwtTokenUtil jwtTokenUtil;
 
-    private final AuthenticationConfiguration authenticationConfiguration;
-
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
@@ -76,11 +74,10 @@ public class SpringSecurity {
                                 // TestController
                                 .requestMatchers("/test").hasAuthority(RoleType.ADMIN.name())
 
-                                .requestMatchers("/error").permitAll() //TODO: Gibts diesen Endpunkt überhaupt?
+                                .requestMatchers("/error").permitAll() //Wird für Fehlermeldungen benötigt
 
                                 .anyRequest().authenticated()
                 )
-//                .addFilter(new AuthenticationFilter(jwtTokenUtil, authenticationManager(authenticationConfiguration)))
                 .addFilterBefore(new AuthTokenFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

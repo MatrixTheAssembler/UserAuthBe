@@ -28,7 +28,7 @@ public class UserService {
     }
 
     private void createUser(String username, String password, List<RoleType> roles) throws UserAlreadyCreatedException {
-        User existingUser = findUserByUserName(username);
+        User existingUser = findUserByUserName(username, true);
         if (existingUser != null) {
             throw new UserAlreadyCreatedException();
         }
@@ -64,11 +64,16 @@ public class UserService {
         return passwordEncoder.matches(userDtoPassword, userPassword);
     }
 
-    public User findUserByUserName(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    public User findUserByUserName(String username, boolean mayBeNull) {
+        User user;
+        if(mayBeNull){
+            user = userRepository.findByUsername(username).orElse(null);
+        } else {
+            user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException(username));
+        }
 
-        if(!user.getUsername().equals(username)){
+        if(user != null && !user.getUsername().equals(username)){
             throw new UnauthorizedException();
         }
 

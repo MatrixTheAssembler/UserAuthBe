@@ -59,10 +59,10 @@ public class SpringSecurity {
 
 
                                 // ArticleController
-                                .requestMatchers(HttpMethod.GET, "/article/*").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/article").hasAuthority(RoleType.AUTOR.name())
-                                .requestMatchers(HttpMethod.PUT, "/article").hasAuthority(RoleType.AUTOR.name())
-                                .requestMatchers(HttpMethod.DELETE, "/article").hasAnyAuthority(RoleType.AUTOR.name()
+                                .requestMatchers(HttpMethod.GET, "/articles/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/articles").hasAuthority(RoleType.AUTOR.name())
+                                .requestMatchers(HttpMethod.PUT, "/articles/{id}").hasAuthority(RoleType.AUTOR.name())
+                                .requestMatchers(HttpMethod.DELETE, "/articles/{id}").hasAnyAuthority(RoleType.AUTOR.name()
                                         , RoleType.MODERATOR.name())
 
                                 // CommentController

@@ -26,7 +26,7 @@ public class AuthService {
     }
 
     public Map<String, String> authenticate(UserDto userDto) throws BadLoginException {
-        User user = userService.findUserByUserName(userDto.getUsername());
+        User user = userService.findUserByUserName(userDto.getUsername(), true);
 
         if(user == null)
             throw new BadLoginException();
@@ -50,7 +50,7 @@ public class AuthService {
     public Map<String, String> refreshTokens(String header) {
         String refreshToken = jwtTokenUtil.getTokenFromAuthorizationHeader(header);
         String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
-        User user = userService.findUserByUserName(username);
+        User user = userService.findUserByUserName(username, false);
 
         if(user == null)
             throw new UsernameNotFoundException("User not found");

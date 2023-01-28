@@ -26,12 +26,12 @@ public class CommentService {
 
     private final UserService userService;
 
-    public void addComment(Long articleId, String comment, String username) {
-        User author = userService.findUserByUserName(username);
+    public Comment addComment(Long articleId, String comment, String username) {
+        User author = userService.findUserByUserName(username, false);
         Article existingArticle = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ArticleNotFoundException(articleId));
 
-        commentRepository.save(Comment.builder()
+        return commentRepository.save(Comment.builder()
                 .content(comment)
                 .author(author)
                 .article(existingArticle)

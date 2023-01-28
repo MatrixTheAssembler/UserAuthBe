@@ -26,7 +26,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (uriMatches(request, "/login")
                 || uriMatches(request, "/refreshTokens")
                 || uriMatches(request, "/register")
-                || uriMatches(request, "/article/.*", "GET")) {
+                || uriMatches(request, "/articles.*", "GET")) {
             filterChain.doFilter(request, response);
             return;
         }

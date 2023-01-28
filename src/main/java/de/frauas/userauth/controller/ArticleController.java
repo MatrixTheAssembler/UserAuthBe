@@ -1,9 +1,7 @@
 package de.frauas.userauth.controller;
 
 import de.frauas.userauth.dto.ArticleDto;
-import de.frauas.userauth.entity.Article;
 import de.frauas.userauth.enums.RoleType;
-import de.frauas.userauth.exceptions.ArticleNotFoundException;
 import de.frauas.userauth.mapper.ArticleMapper;
 import de.frauas.userauth.service.ArticleService;
 import de.frauas.userauth.util.JwtTokenUtil;
@@ -17,7 +15,7 @@ import java.util.List;
 @Controller
 @ResponseBody
 @RequiredArgsConstructor
-@RequestMapping("/article")
+@RequestMapping("/articles")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -26,12 +24,11 @@ public class ArticleController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticle(@PathVariable Long id) {
-        return ResponseEntity.ok(articleService.findArticleById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(id)));
+    public ResponseEntity<ArticleDto> getArticle(@PathVariable Long id) {
+        return ResponseEntity.ok(ArticleMapper.toArticleDto(articleService.findArticleById(id)));
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<ArticleDto> getAllArticles() {
         return ArticleMapper.toArticleDtoList(articleService.findAllArticles());
     }

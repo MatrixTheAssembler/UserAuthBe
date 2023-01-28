@@ -25,19 +25,16 @@ public class UserController {
         return UserMapper.toUserDtoList(userService.findAllUsers());
     }
 
-    @GetMapping("/roles")
-    public List<RoleType> roleList() {
-        return List.of(RoleType.values());
-    }
-
     @GetMapping("/{username}")
     public ResponseEntity<UserDto> user(@PathVariable String username) {
-        return ResponseEntity.ok(UserMapper.toUserDto(userService.findUserByUserName(username)));
+        return ResponseEntity.ok(UserMapper.toUserDto(userService.findUserByUserName(username, false)));
     }
 
     @PutMapping("/{username}")
-    public void updateRoles(@PathVariable String username, @RequestBody List<RoleType> roleList) {
-        User existingUser = userService.findUserByUserName(username);
+    public ResponseEntity<UserDto> updateRoles(@PathVariable String username, @RequestBody List<RoleType> roleList) {
+        User existingUser = userService.findUserByUserName(username, false);
         userService.updateRoleList(existingUser, roleList);
+        User updatedUser = userService.findUserByUserName(username, false);
+        return ResponseEntity.ok(UserMapper.toUserDto(updatedUser));
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -23,8 +22,9 @@ public class ArticleService {
     private final UserService userService;
 
 
-    public Optional<Article> findArticleById(Long id) {
-        return articleRepository.findById(id);
+    public Article findArticleById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new ArticleNotFoundException(id));
     }
 
     public List<Article> findAllArticles() {
@@ -32,7 +32,7 @@ public class ArticleService {
     }
 
     public void createArticle(ArticleDto articleDto, String username) {
-        User author = userService.findUserByUserName(username);
+        User author = userService.findUserByUserName(username, false);
         Article article = Article.builder()
                 .headline(articleDto.getHeadline())
                 .content(articleDto.getContent())
@@ -44,8 +44,7 @@ public class ArticleService {
     }
 
     public void deleteArticle(Long id, String username, List<RoleType> roles) {
-        Article existingArticle = findArticleById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(id));
+        Article existingArticle = findArticleById(id);
 
         if (!existingArticle.getAuthor().getUsername().equals(username) ||
                 roles.contains(RoleType.MODERATOR)) {
@@ -56,8 +55,7 @@ public class ArticleService {
     }
 
     public void updateArticle(Long id, ArticleDto articleDto, String username) {
-        Article existingArticle = findArticleById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(id));
+        Article existingArticle = findArticleById(id);
 
         if (!existingArticle.getAuthor().getUsername().equals(username)) {
             throw new UnauthorizedException();

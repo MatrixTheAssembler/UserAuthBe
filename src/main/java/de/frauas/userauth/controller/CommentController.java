@@ -21,7 +21,6 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-
     private final JwtTokenUtil jwtTokenUtil;
 
 
@@ -32,16 +31,15 @@ public class CommentController {
         return new ResponseEntity<>(CommentMapper.toCommentDto(newComment), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{articleId}/{commentId}")
-    public void deleteComment(@PathVariable Long articleId, @PathVariable Long commentId,
-                              @RequestHeader("Authorization") String header) {
+    @DeleteMapping("/{id}")
+    public void deleteComment(@PathVariable Long id, @RequestHeader("Authorization") String header) {
         List<RoleType> roles = jwtTokenUtil.getRolesFromHeader(header);
-        commentService.deleteComment(articleId, commentId, jwtTokenUtil.getUsernameFromHeader(header), roles);
+        commentService.deleteComment(id, jwtTokenUtil.getUsernameFromHeader(header), roles);
     }
 
-    @PutMapping("/{articleId}/{commentId}")
-    public void updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody String content,
+    @PutMapping("/{id}")
+    public void updateComment(@PathVariable Long id, @RequestBody String content,
                               @RequestHeader("Authorization") String header) {
-        commentService.updateComment(articleId, commentId, content, jwtTokenUtil.getUsernameFromHeader(header));
+        commentService.updateComment(id, content, jwtTokenUtil.getUsernameFromHeader(header));
     }
 }

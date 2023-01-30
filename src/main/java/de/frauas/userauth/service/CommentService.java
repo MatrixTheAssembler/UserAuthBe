@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -43,34 +42,25 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-    public void deleteComment(Long articleId, Long commentId, String username, List<RoleType> roles) {
-        Article existingArticle =
-                articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(articleId));
-        Comment existingComment =
-                existingArticle.getComments().stream().filter(c -> Objects.equals(c.getId(), commentId)).findFirst()
-                        .orElseThrow(() -> new CommentNotFoundException(commentId));
+    public void deleteComment(Long id, String username, List<RoleType> roles) {
+        Comment existingComment = findCommentById(id).orElseThrow(() -> new CommentNotFoundException(id));
 
         if (!existingComment.getAuthor().getUsername().equals(username) &&
                 !roles.contains(RoleType.MODERATOR)) {
             throw new UnauthorizedException();
         }
 
-        commentRepository.deleteById(commentId);
+        commentRepository.deleteById(id);
     }
 
-    public void updateComment(Long articleId, Long commentId, String content, String username) {
-        Article existingArticle =
-                articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(articleId));
-        Comment existingComment =
-                existingArticle.getComments().stream().filter(c -> Objects.equals(c.getId(), commentId)).findFirst()
-                        .orElseThrow(() -> new CommentNotFoundException(commentId));
+    public void updateComment(Long id, String content, String username) {
+        Comment existingComment = findCommentById(id).orElseThrow(() -> new CommentNotFoundException(id));
 
         if (!existingComment.getAuthor().getUsername().equals(username)) {
             throw new UnauthorizedException();
         }
 
         existingComment.setContent(content);
-
         commentRepository.save(existingComment);
     }
 }

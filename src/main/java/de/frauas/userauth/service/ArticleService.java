@@ -46,8 +46,8 @@ public class ArticleService {
     public void deleteArticle(Long id, String username, List<RoleType> roles) {
         Article existingArticle = findArticleById(id);
 
-        if (!existingArticle.getAuthor().getUsername().equals(username) ||
-                roles.contains(RoleType.MODERATOR)) {
+        if (!existingArticle.getAuthor().getUsername().equals(username) &&
+                !roles.contains(RoleType.MODERATOR)) {
             throw new UnauthorizedException();
         }
 

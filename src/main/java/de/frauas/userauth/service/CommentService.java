@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,21 +43,27 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-    public void deleteComment(Long id, String username, List<RoleType> roles) {
-        Comment existingComment = findCommentById(id)
-                .orElseThrow(() -> new CommentNotFoundException(id));
+    public void deleteComment(Long articleId, Long commentId, String username, List<RoleType> roles) {
+        Article existingArticle =
+                articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(articleId));
+        Comment existingComment =
+                existingArticle.getComments().stream().filter(c -> Objects.equals(c.getId(), commentId)).findFirst()
+                        .orElseThrow(() -> new CommentNotFoundException(commentId));
 
-        if (!existingComment.getAuthor().getUsername().equals(username) ||
-                roles.contains(RoleType.MODERATOR)) {
+        if (!existingComment.getAuthor().getUsername().equals(username) &&
+                !roles.contains(RoleType.MODERATOR)) {
             throw new UnauthorizedException();
         }
 
-        commentRepository.deleteById(id);
+        commentRepository.deleteById(commentId);
     }
 
-    public void updateComment(Long id, String content, String username) {
-        Comment existingComment = findCommentById(id)
-                .orElseThrow(() -> new CommentNotFoundException(id));
+    public void updateComment(Long articleId, Long commentId, String content, String username) {
+        Article existingArticle =
+                articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(articleId));
+        Comment existingComment =
+                existingArticle.getComments().stream().filter(c -> Objects.equals(c.getId(), commentId)).findFirst()
+                        .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         if (!existingComment.getAuthor().getUsername().equals(username)) {
             throw new UnauthorizedException();

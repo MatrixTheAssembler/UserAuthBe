@@ -28,19 +28,20 @@ public class CommentController {
     @PostMapping("/{articleId}")
     public ResponseEntity<CommentDto> addComment(@PathVariable Long articleId, @RequestBody String comment,
                                                  @RequestHeader("Authorization") String header) {
-        Comment newComment = commentService.addComment(articleId, comment, header);
+        Comment newComment = commentService.addComment(articleId, comment, jwtTokenUtil.getUsernameFromHeader(header));
         return new ResponseEntity<>(CommentMapper.toCommentDto(newComment), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteComment(@PathVariable Long id, @RequestHeader("Authorization") String header) {
+    @DeleteMapping("/{articleId}/{commentId}")
+    public void deleteComment(@PathVariable Long articleId, @PathVariable Long commentId,
+                              @RequestHeader("Authorization") String header) {
         List<RoleType> roles = jwtTokenUtil.getRolesFromHeader(header);
-        commentService.deleteComment(id, header, roles);
+        commentService.deleteComment(articleId, commentId, jwtTokenUtil.getUsernameFromHeader(header), roles);
     }
 
-    @PutMapping("/{id}")
-    public void updateComment(@PathVariable Long id, @RequestBody String content,
+    @PutMapping("/{articleId}/{commentId}")
+    public void updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody String content,
                               @RequestHeader("Authorization") String header) {
-        commentService.updateComment(id, content, header);
+        commentService.updateComment(articleId, commentId, content, jwtTokenUtil.getUsernameFromHeader(header));
     }
 }

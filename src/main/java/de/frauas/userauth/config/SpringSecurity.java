@@ -68,7 +68,7 @@ public class SpringSecurity {
                                 // CommentController
                                 .requestMatchers(HttpMethod.POST, "/comment").hasAuthority(RoleType.LESER.name())
                                 .requestMatchers(HttpMethod.PUT, "/comment").hasAuthority(RoleType.LESER.name())
-                                .requestMatchers(HttpMethod.DELETE, "/comment").hasAnyAuthority(RoleType.LESER.name()
+                                .requestMatchers(HttpMethod.DELETE, "/comment/{articleId}/{commentId}").hasAnyAuthority(RoleType.LESER.name()
                                         , RoleType.MODERATOR.name())
 
                                 // TestController

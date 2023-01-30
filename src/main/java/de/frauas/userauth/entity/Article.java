@@ -2,16 +2,14 @@ package de.frauas.userauth.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +23,7 @@ public class Article {
     @Column
     private String headline;
 
-    @Column
+    @Column(length = 50000)
     private String content;
 
     @JsonManagedReference

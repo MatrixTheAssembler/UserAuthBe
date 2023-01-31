@@ -61,13 +61,13 @@ public class SpringSecurity {
                                 // ArticleController
                                 .requestMatchers(HttpMethod.GET, "/articles/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/articles").hasAuthority(RoleType.AUTOR.name())
-                                .requestMatchers(HttpMethod.DELETE, "/articles/{id}").hasAnyAuthority(RoleType.AUTOR.name()
-                                        , RoleType.MODERATOR.name())
+                                .requestMatchers(HttpMethod.DELETE, "/articles/{id}").hasAnyAuthority(RoleType.AUTOR.name(),
+                                        RoleType.MODERATOR.name())
 
                                 // CommentController
                                 .requestMatchers(HttpMethod.POST, "/comment").hasAuthority(RoleType.LESER.name())
-                                .requestMatchers(HttpMethod.DELETE, "/comment").hasAnyAuthority(RoleType.LESER.name()
-                                        , RoleType.MODERATOR.name())
+                                .requestMatchers(HttpMethod.DELETE, "/comment").hasAnyAuthority(RoleType.LESER.name(),
+                                        RoleType.MODERATOR.name())
 
                                 // TestController
                                 .requestMatchers("/test").hasAuthority(RoleType.ADMIN.name())

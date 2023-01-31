@@ -53,16 +53,4 @@ public class ArticleService {
 
         articleRepository.deleteById(id);
     }
-
-    public void updateArticle(Long id, ArticleDto articleDto, String username) {
-        Article existingArticle = findArticleById(id);
-
-        if (!existingArticle.getAuthor().getUsername().equals(username)) {
-            throw new UnauthorizedException();
-        }
-
-        existingArticle.setHeadline(articleDto.getHeadline());
-        existingArticle.setContent(articleDto.getContent());
-        articleRepository.save(existingArticle);
-    }
 }

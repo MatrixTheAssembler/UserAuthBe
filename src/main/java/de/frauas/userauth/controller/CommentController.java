@@ -36,10 +36,4 @@ public class CommentController {
         List<RoleType> roles = jwtTokenUtil.getRolesFromHeader(header);
         commentService.deleteComment(id, jwtTokenUtil.getUsernameFromHeader(header), roles);
     }
-
-    @PutMapping("/{id}")
-    public void updateComment(@PathVariable Long id, @RequestBody String content,
-                              @RequestHeader("Authorization") String header) {
-        commentService.updateComment(id, content, jwtTokenUtil.getUsernameFromHeader(header));
-    }
 }

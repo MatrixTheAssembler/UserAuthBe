@@ -52,15 +52,4 @@ public class CommentService {
 
         commentRepository.deleteById(id);
     }
-
-    public void updateComment(Long id, String content, String username) {
-        Comment existingComment = findCommentById(id).orElseThrow(() -> new CommentNotFoundException(id));
-
-        if (!existingComment.getAuthor().getUsername().equals(username)) {
-            throw new UnauthorizedException();
-        }
-
-        existingComment.setContent(content);
-        commentRepository.save(existingComment);
-    }
 }

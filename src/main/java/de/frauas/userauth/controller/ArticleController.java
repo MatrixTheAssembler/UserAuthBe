@@ -45,11 +45,4 @@ public class ArticleController {
         List<RoleType> roles = jwtTokenUtil.getRolesFromHeader(header);
         articleService.deleteArticle(id, username, roles);
     }
-
-    @PutMapping("/{id}")
-    public void updateArticle(@PathVariable Long id, @RequestBody ArticleDto articleDto, @RequestHeader(
-            "Authorization") String header) {
-        String username = jwtTokenUtil.getUsernameFromHeader(header);
-        articleService.updateArticle(id, articleDto, username);
-    }
 }
